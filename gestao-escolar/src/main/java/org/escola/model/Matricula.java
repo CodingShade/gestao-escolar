@@ -49,7 +49,7 @@ public class Matricula {
         return dataMatricula;
     }
 
-    // Setters (opcional, mas recomendado)
+    // Setters
     public void setId(Long id) {
         this.id = id;
     }

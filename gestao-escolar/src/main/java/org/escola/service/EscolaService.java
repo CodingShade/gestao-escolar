@@ -287,6 +287,7 @@ public class EscolaService {
 
     public void exibirRelatorioEngajamento() {
         System.out.println("\n=== RELATÓRIO AVANÇADO DE ENGAJAMENTO ===");
+        System.out.println("Data de geração: " + LocalDate.now() + "\n");
 
         List<Curso> cursos = cursoRepo.buscarTodos();
         LocalDate dataLimite = LocalDate.now().minusDays(30);
@@ -296,9 +297,10 @@ public class EscolaService {
             return;
         }
 
-        System.out.printf("%-30s | %-8s | %-15s | %-25s%n",
-                "CURSO", "ALUNOS", "MÉDIA IDADE", "MATRÍCULAS (30 DIAS)");
-        System.out.println("-".repeat(85));
+        // Cabeçalho
+        System.out.println("+----------------------------+-----------+--------------+---------------------+");
+        System.out.println("| Curso                      | Alunos    | Média Idade  | Matrículas (30 dias)|");
+        System.out.println("+----------------------------+-----------+--------------+---------------------+");
 
         for (Curso curso : cursos) {
             Long totalAlunos = matriculaRepo.contarMatriculasPorCurso(curso.getId());
@@ -306,15 +308,16 @@ public class EscolaService {
             Long matriculasRecentes = matriculaRepo.contarMatriculasRecentesPorCurso(
                     curso.getId(), dataLimite);
 
-            // Formata a média de idade para 1 casa decimal
-            String mediaFormatada = mediaIdade != null ?
-                    String.format("%.1f anos", mediaIdade) : "N/A";
 
-            System.out.printf("%-30s | %-8d | %-15s | %-25d%n",
-                    curso.getNome(),
+            String mediaFormatada = mediaIdade != null ?
+                    String.format("%.1f anos", mediaIdade).replace(",", ".") : "N/A";
+
+            System.out.printf("| %-26s | %-9d | %-12s | %-19d |%n",
+                    curso.getNome().length() > 26 ? curso.getNome().substring(0, 23) + "..." : curso.getNome(),
                     totalAlunos,
                     mediaFormatada,
                     matriculasRecentes);
         }
+        System.out.println("+----------------------------+-----------+--------------+---------------------+");
     }
 }
